@@ -1,3 +1,9 @@
+### How to test
+RSA Key Encryption
+-------------------
+
+To generate a new RSA key, you will have to login and head to your account page by selecting 'My Account' from the dropdown. Once there, scroll down and you will see an option to generate a new RSA key. You will be prompted for a passphrase which you use to generate the RSA key again. The key is available for download only once. 
+
 Challenge Server
 =======================
 
@@ -524,10 +530,6 @@ This section is intended for giving you a detailed explanation about
 how a particular functionality works. Maybe you are just curious about
 how it works, or maybe you are lost and confused while reading the code,
 I hope it provides some guidance to you.
-
-###RSA Key Encryption
-
-To generate a new RSA key, you will have to login and head to your account page by selecting 'My Account' from the dropdown. Once there, scroll down and you will see an option to generate a new RSA key. You will be prompted for a passphrase which you use to generate the RSA key again. The key is available for download only once. 
 
 ###Custom HTML and CSS Design 101
 
