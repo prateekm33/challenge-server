@@ -64,6 +64,26 @@ block content
           | Change Password
 
   .page-header
+    h3 Generate new RSA key
+
+  form.form-horizontal(id='rsa-form')
+    input(type='hidden', name='_csrf', value=_csrf)
+    .form-group
+      label.col-sm-3.control-label(for='passphrase') Enter Passphrase
+      .col-sm-7
+        input.form-control(type='text', name='passphrase', id='passphrase')
+    .form-group
+      .col-sm-offset-3.col-sm-4
+        button.btn.btn-danger(type='submit', id='passphrase-submit')
+          | Generate key
+  form.form-horizontal(id='gen-new-key')
+    .form-group
+      p.col-sm-offset-3.col-sm-4 You can generate a new key, but keep in mind that this will reset your public key as well.
+      .col-sm-offset-3.col-sm-4
+        button.btn.btn-danger(type='submit')
+          | Generate a new key
+
+  .page-header
     h3 Delete Account
 
   form.form-horizontal(action='/account/delete', method='POST')

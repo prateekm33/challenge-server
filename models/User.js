@@ -17,6 +17,8 @@ const userSchema = new mongoose.Schema({
   steam: String,
   tokens: Array,
 
+  publicKey: String,
+
   profile: {
     name: { type: String, default: '' },
     gender: { type: String, default: '' },

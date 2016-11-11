@@ -83,7 +83,7 @@ app.use(passport.initialize());
 app.use(passport.session());
 app.use(flash());
 app.use((req, res, next) => {
-  if (req.path === '/api/upload') {
+  if (req.path === '/api/upload' || req.path === '/rsa') {
     next();
   } else {
     lusca.csrf()(req, res, next);
@@ -128,6 +128,10 @@ app.post('/account/profile', passportConfig.isAuthenticated, userController.post
 app.post('/account/password', passportConfig.isAuthenticated, userController.postUpdatePassword);
 app.post('/account/delete', passportConfig.isAuthenticated, userController.postDeleteAccount);
 app.get('/account/unlink/:provider', passportConfig.isAuthenticated, userController.getOauthUnlink);
+
+
+// app.post('/rsa', passportConfig.isAuthenticated, userController.saveRSAkey)
+app.post('/rsa', userController.saveRSAkey)
 
 /**
  * API examples routes.
