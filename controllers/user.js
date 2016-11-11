@@ -387,3 +387,9 @@ exports.saveRSAkey = (req, res) => {
 
   res.end();
 }
+
+exports.getEncrypt = (req, res) => {
+  res.render('encrypt', {
+    title: 'Encrypt'
+  })
+}

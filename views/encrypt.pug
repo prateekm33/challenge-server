@@ -1,0 +1,18 @@
+extends layout
+
+block content
+  .page-header
+    h2
+      i.fa.fa-upload
+      | File Upload
+
+  h3 File Encryption Upload Form
+  .row
+    .col-sm-6
+      form(role='form', enctype='multipart/form-data', id='file-upload')
+        .form-group
+          input(type='text', name='RSA', id='enrypt-key')
+        .form-group
+          label.control-label File Input
+          input(type='file', name='myFile', id='files')
+        button.btn.btn-primary(type='submit') Submit

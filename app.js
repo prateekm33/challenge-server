@@ -129,6 +129,7 @@ app.post('/account/password', passportConfig.isAuthenticated, userController.pos
 app.post('/account/delete', passportConfig.isAuthenticated, userController.postDeleteAccount);
 app.get('/account/unlink/:provider', passportConfig.isAuthenticated, userController.getOauthUnlink);
 
+app.get('/encrypt', userController.getEncrypt);
 
 // app.post('/rsa', passportConfig.isAuthenticated, userController.saveRSAkey)
 app.post('/rsa', userController.saveRSAkey)

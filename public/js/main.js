@@ -9,6 +9,7 @@ $(document).ready(function() {
 function initRSAkeyUI() {
   const $rsaForm = $('#rsa-form')
   $rsaForm.on('submit', evt => { 
+    // TODO: escape user input
     const passphrase = $('#passphrase').val();
     $('#passphrase').val('')
 
@@ -46,8 +47,6 @@ function disableDownload() {
 
 function saveKeyToDB(key) {
   const email = $('#user-email').val();
-  console.log('EMAIL: ', email)
-
   const body = {
     key: key,
     email: email
@@ -76,12 +75,28 @@ function downloadKey(key) {
 
 
 
-
 /* -------- File Encryption Service --------- */
 
 function initFileEncryptionService() {
-  // TODO: UI!
+  $('#file-upload').on('submit', () => {
+    const files = $('#files').files;
+    const publicKey = getEncryptKey(); 
+    readFile(files, publicKey)
+
+    return false;
+  })
 }
+
+function getEncryptKey() {
+  // TODO!
+  const key = null; // temporary
+
+  // get public key from db
+  // or prompt user to provide private key, and regen public key using cryptico
+
+  return key;
+}
+
 
 function readFile(files, publicKey) {
   for (let file in files) {
@@ -95,15 +110,19 @@ function readFile(files, publicKey) {
 
 
       // make file available for download
-      handleFileDownloadAvailable();
+      fileDownloadAvailable();
     }
     if (typeof files[file] !== 'object') { continue; }
     reader.readAsText(files[file])
   }
 }
 
-function handleFileDownloadAvailable() {
+function fileDownloadAvailable() {
   // TODO: UI!
+}
+
+function downloadFile() {
+  // TODO ---
 }
 
 
