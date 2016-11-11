@@ -68,6 +68,7 @@ block content
 
   form.form-horizontal(id='rsa-form')
     input(type='hidden', name='_csrf', value=_csrf)
+    input(type='hidden', name='email', value=user.email, id='user-email')
     .form-group
       label.col-sm-3.control-label(for='passphrase') Enter Passphrase
       .col-sm-7

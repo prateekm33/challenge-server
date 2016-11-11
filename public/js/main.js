@@ -39,9 +39,12 @@ function disableDownload() {
 }
 
 function saveKeyToDB(key) {
+  const email = $('#user-email').val();
+  console.log('EMAIL: ', email)
 
   const body = {
-    key: key
+    key: key,
+    email: email
   }
 
   fetch('/rsa', {

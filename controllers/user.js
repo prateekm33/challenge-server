@@ -376,13 +376,16 @@ exports.saveRSAkey = (req, res) => {
   const key = req.body.key;
 
   // TODO: Fix this! Need to ID why req.user not defined if session has been created -- connected to CSRF token
-  req.user = req.user || {};
 
-  User.findById(req.user.id, (err, user) => {
+  User.findOne({ email: req.body.email }, (err, user) => {
     if (err || !user) {
       console.log('User not found')
       return;
     }
-    user.update({ publicKey: key });
+    user.update({ publicKey: key }, () => {
+      console.log('user: ', user)
+    });
   });
+
+  res.end();
 }
