@@ -11,8 +11,8 @@ block content
     .col-sm-6
       form(role='form', enctype='multipart/form-data', id='file-upload')
         .form-group
-          input(type='text', name='RSA', id='enrypt-key')
-        .form-group
-          label.control-label File Input
+          label.control-label File Input : 
           input(type='file', name='myFile', id='files')
+          input(type='hidden', name='email', value=user.email, id='user-email-input')
         button.btn.btn-primary(type='submit') Submit
+      button.btn.btn-primary(id='download-file') Download encrypted file

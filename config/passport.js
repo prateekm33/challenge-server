@@ -483,6 +483,7 @@ passport.use('pinterest', new OAuth2Strategy({
  */
 exports.isAuthenticated = (req, res, next) => {
   if (req.isAuthenticated()) {
+    console.log('AUTHENTICATED')
     return next();
   }
   res.redirect('/login');

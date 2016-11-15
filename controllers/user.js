@@ -378,6 +378,7 @@ exports.saveRSAkey = (req, res) => {
   User.findOne({ email: req.body.email }, (err, user) => {
     if (err || !user) {
       console.log('User not found')
+      // TODO: better error handling
       return;
     }
     user.update({ publicKey: key }, () => {
@@ -391,5 +392,23 @@ exports.saveRSAkey = (req, res) => {
 exports.getEncrypt = (req, res) => {
   res.render('encrypt', {
     title: 'Encrypt'
+  })
+}
+exports.getDecrypt = (req, res) => {
+  res.render('decrypt', {
+    title: 'Decrypt'
+  })
+}
+
+exports.getRSAkey = (req, res) => {
+  const email = req.query.email;
+  User.findOne({ email: email }, (err, user) => {
+    if (err || !user) {
+      console.log('User not found')
+      // TODO: better error handling
+      return res.status(400).send({key: null})
+    }
+
+    return res.status(200).send({key: user.publicKey});
   })
 }

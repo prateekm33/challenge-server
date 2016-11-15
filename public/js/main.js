@@ -1,6 +1,10 @@
+let _RSAkey = null;
+
+
 $(document).ready(function() {
   initRSAkeyUI();
   initFileEncryptionService();
+  initFileDecryptionService();
 });
 
 
@@ -31,8 +35,11 @@ function genRSA(passphrase) {
   const RSAkey = cryptico.generateRSAKey(passphrase, 1024);
   const pubKey = cryptico.publicKeyString(RSAkey);
 
+  _RSAkey = RSAkey;
+
   // init download of private key
-  downloadKey(RSAkey);
+  const formattedKey = formatRSAkey(RSAkey)
+  download('RSAkey.txt', formattedKey);
 
   // send public key to DB to be saved
   saveKeyToDB(pubKey);
@@ -40,9 +47,32 @@ function genRSA(passphrase) {
   disableDownload();
 }
 
-function disableDownload() {
-  $('#rsa-form').hide();
-  $('#gen-new-key').show();
+function formatRSAkey(RSAkey) {
+  // TODO: any formatting prior to download needs to be done here
+  let formattedKey = RSAkey;
+
+  return formattedKey;
+}
+
+function disableDownload(form) {
+  switch (form) {
+    case 'rsa':
+      $('#rsa-form').hide();
+      $('#gen-new-key').show();
+      return;
+    case 'encryption':
+      $('#download-file').hide()
+      $('#file-upload').show();
+      return;
+    case 'decrypt':
+      $('#download-decrypt-file').hide();
+      $('#decrypt-file-upload').show();
+      return;
+    default:
+      $('#rsa-form').hide();
+      $('#gen-new-key').show();
+      return;
+  }
 }
 
 function saveKeyToDB(key) {
@@ -63,14 +93,22 @@ function saveKeyToDB(key) {
 
 
 // TODO: cryptico library creates an RSA object. Need to ID how to convert that object into a private key string 
-function downloadKey(key) {
-  var blob = new Blob([JSON.stringify(key)], {type : 'octet/stream'});
+function download(filename = 'sample.txt', data) {
+  if (!data) {
+    // TODO: Better null handling
+    return null;
+  }
+
+
+  var blob = new Blob([JSON.stringify(data)], {type : 'octet/stream'});
   blob = window.URL.createObjectURL(blob);
   const a = document.createElement('a');
   a.setAttribute('href', blob);
-  a.setAttribute('download', 'RSAkey.txt');
+  a.setAttribute('download', filename);
   a.click()
   window.URL.revokeObjectURL(blob)
+
+
 }
 
 
@@ -78,51 +116,95 @@ function downloadKey(key) {
 /* -------- File Encryption Service --------- */
 
 function initFileEncryptionService() {
-  $('#file-upload').on('submit', () => {
-    const files = $('#files').files;
-    const publicKey = getEncryptKey(); 
-    readFile(files, publicKey)
 
-    return false;
+  $('#file-upload').on('submit', e => {
+    e.preventDefault()
+
+    const file = $('#files')[0].files[0];
+    getEncryptKey()
+      .then(key => { 
+        encryptFile(file, key);
+      });
+
+  });
+
+  $('#download-file').on('click', () => {
+    $('#download-file').hide();
+    $('#file-upload').show();
+    download('sample_encrypted.txt', encryptedFile.cipher);
+    disableDownload('encryption');
   })
 }
 
 function getEncryptKey() {
-  // TODO!
-  const key = null; // temporary
-
-  // get public key from db
-  // or prompt user to provide private key, and regen public key using cryptico
-
-  return key;
+  const email = $('#user-email-input').val()
+  return fetch('/rsa?email=' + email)
+    .then(res => res.json())
+    .then(res => res.key)
+    .catch(e => { 
+      console.log('[ERROR]: ', e);
+      return false;
+    });
 }
 
-
-function readFile(files, publicKey) {
-  for (let file in files) {
-    let reader = new FileReader()
-    reader.onload = () => {
-      const fileContent = JSON.parse(reader.result);
-      // encrypt file content
-      const encryptedContent = cryptico.encrypt(fileContent, publicKey);
-      
-      // TODO: overwrite original with encryptedContent
+let encryptedFile = {};
 
 
-      // make file available for download
+function encryptFile(file, publicKey) {
+
+  readFile(file, encryptHelper);
+
+  function encryptHelper() {
+    // encrypt file content
+    encryptedFile = cryptico.encrypt(this.result, publicKey);
+    // make file available for download
+    if (encryptedFile.status === 'success') {
       fileDownloadAvailable();
     }
-    if (typeof files[file] !== 'object') { continue; }
-    reader.readAsText(files[file])
+    $('#files').val('')
   }
 }
 
 function fileDownloadAvailable() {
-  // TODO: UI!
-}
-
-function downloadFile() {
-  // TODO ---
+  $('#file-upload').hide();
+  $('#download-file').show();
 }
 
 
+
+
+/*---------- Decrypting Service -----------*/
+
+function initFileDecryptionService() {
+  $('#decrypt-file-upload').on('submit', e => {
+    e.preventDefault();
+
+    const keyFile = $('#privateKey')[0].files[0];
+    readFile(keyFile, function() {
+      const RSAkey = JSON.parse(this.result);
+      const file = $('#decrypt-file')[0].files[0];
+      decryptFile(file, RSAkey);
+    })
+  })
+
+}
+
+function decryptFile(file, RSAkey) {
+  readFile(file, decryptHelper)
+
+  function decryptHelper() {
+    const decryptedText = cryptico.decrypt(this.result, RSAkey);
+
+    // TODO: HANDLE UI FOR DECRYPT FILE AVAILABLE FOR DOWNLOAD
+  }
+}
+
+
+
+/* ------------ Helper Functions -------------*/
+
+function readFile(file, callback) {
+  let reader = new FileReader();
+  reader.onload = callback;
+  reader.readAsText(file);
+}

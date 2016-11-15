@@ -17,8 +17,10 @@
           a(href='/api') API Examples
         li(class=(title == 'Contact') ? 'active' : undefined)
           a(href='/contact') Contact
-        li(class=(title == 'Upload') ? 'active' : undefined)
+        li(class=(title == 'Encrypt') ? 'active' : undefined)
           a(href='/encrypt') Encrypt
+        li(class=(title== 'Decrypt') ? 'active' : undefined)
+          a(href='/decrypt') Decrypt
       ul.nav.navbar-nav.navbar-right
         if !user
           li(class=(title == 'Login') ? 'active' : undefined)

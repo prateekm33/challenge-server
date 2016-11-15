@@ -1,3 +1,11 @@
 #gen-new-key {
   display: none;
 }
+
+#download-file {
+  display: none;
+}
+
+#download-decrypt-file {
+  display: none;
+}

@@ -128,11 +128,12 @@ app.post('/account/profile', passportConfig.isAuthenticated, userController.post
 app.post('/account/password', passportConfig.isAuthenticated, userController.postUpdatePassword);
 app.post('/account/delete', passportConfig.isAuthenticated, userController.postDeleteAccount);
 app.get('/account/unlink/:provider', passportConfig.isAuthenticated, userController.getOauthUnlink);
-
 app.get('/encrypt', userController.getEncrypt);
+app.get('/decrypt', userController.getDecrypt);
 
-// app.post('/rsa', passportConfig.isAuthenticated, userController.saveRSAkey)
+
 app.post('/rsa', userController.saveRSAkey)
+app.get('/rsa', userController.getRSAkey);
 
 /**
  * API examples routes.

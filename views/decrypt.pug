@@ -1,0 +1,20 @@
+extends layout
+
+block content
+  .page-header
+    h2
+      i.fa.fa-upload
+      | File Upload
+
+  h3 File Decryption Upload Form
+  .row
+    .col-sm-6
+      form(role='form', enctype='multipart/form-data', id='decrypt-file-upload')
+        .form-group
+          label.control-label Private Key :
+          input(type='file', name='myKey', id='privateKey')
+          label.control-label File Input : 
+          input(type='file', name='myFile', id='decrypt-file')
+          input(type='hidden', name='email', value=user.email, id='user-email-input')
+        button.btn.btn-primary(type='submit') Submit
+      button.btn.btn-primary(id='download-decrypt-file') Download decrypted file
