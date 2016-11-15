@@ -1,8 +1,25 @@
-### How to test
+How to test
+================
+
 RSA Key Encryption
 -------------------
 
 To generate a new RSA key, you will have to login and head to your account page by selecting 'My Account' from the dropdown. Once there, scroll down and you will see an option to generate a new RSA key. You will be prompted for a passphrase which you use to generate the RSA key again. The key is available for download only once. 
+
+
+Encryption Service
+------------------
+
+To encrypt a file, click on the 'Encrypt' header option and you will be navigated to a page where you can upload a file that you would like to encrypt. You will have to be logged in for this functionality to work, and you will need to have already created an RSA key/pair (as described above). If you have not done so, please read the above. Once you upload a file, it will be encrypted and downloaded to your computer. If you would like to download the file again, you will have to encrypt it once more. 
+
+
+Decryption Service
+-------------------
+
+To decrypt a file, click on the 'Decrypt' header option and you will be navigated to a page where you can upload the file you would like to be decrypted, and the RSA private key that you would like to decrypt it with. 
+
+
+
 
 Challenge Server
 =======================
