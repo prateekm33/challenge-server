@@ -182,6 +182,11 @@ function initFileDecryptionService() {
     })
   })
 
+  $('#download-decrypt-file').click(() => {
+    download('decrypted_message.txt', decryptedMessage);
+    disableDownload('decrypt');
+  });
+
 }
 
 let decryptedMessage = '';
@@ -198,7 +203,8 @@ function decryptFile(file, RSAkey) {
 }
 
 function decryptedAvailableForDL() {
-  
+  $('#decrypt-file-upload').hide();
+  $('#download-decrypt-file').show();
 }
 
 
