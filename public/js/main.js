@@ -1,6 +1,3 @@
-let _RSAkey = null;
-
-
 $(document).ready(function() {
   initRSAkeyUI();
   initFileEncryptionService();
@@ -35,8 +32,6 @@ function genRSA(passphrase) {
   const RSAkey = cryptico.generateRSAKey(passphrase, 1024);
   const pubKey = cryptico.publicKeyString(RSAkey);
 
-  _RSAkey = RSAkey;
-
   // init download of private key
   const formattedKey = formatRSAkey(RSAkey)
   download('RSAkey.txt', formattedKey);
@@ -49,7 +44,7 @@ function genRSA(passphrase) {
 
 function formatRSAkey(RSAkey) {
   // TODO: any formatting prior to download needs to be done here
-  let formattedKey = RSAkey;
+  const formattedKey = cryptico.privateKeyString(RSAkey);
 
   return formattedKey;
 }
@@ -181,22 +176,29 @@ function initFileDecryptionService() {
 
     const keyFile = $('#privateKey')[0].files[0];
     readFile(keyFile, function() {
-      const RSAkey = JSON.parse(this.result);
+      const _RSAkey = cryptico.privateKeyFromString(this.result);
       const file = $('#decrypt-file')[0].files[0];
-      decryptFile(file, RSAkey);
+      decryptFile(file, _RSAkey);
     })
   })
 
 }
 
+let decryptedMessage = '';
+
 function decryptFile(file, RSAkey) {
   readFile(file, decryptHelper)
 
   function decryptHelper() {
-    const decryptedText = cryptico.decrypt(this.result, RSAkey);
-
+    const decryptedTextObj = cryptico.decrypt(this.result, RSAkey);
+    decryptedMessage = decryptedTextObj.plaintext;
     // TODO: HANDLE UI FOR DECRYPT FILE AVAILABLE FOR DOWNLOAD
+    decryptedAvailableForDL();
   }
+}
+
+function decryptedAvailableForDL() {
+  
 }
 
 
@@ -207,4 +209,30 @@ function readFile(file, callback) {
   let reader = new FileReader();
   reader.onload = callback;
   reader.readAsText(file);
+}
+
+
+cryptico.privateKeyString = (rsakey) => {
+  const obj = {};
+  const options = ['n', 'e', 'd', 'p', 'q', 'dmp1', 'dmq1', 'coeff'];
+
+  options.forEach(opt => {
+    obj[opt] = cryptico.b16to64(rsakey[opt].toString(16))
+  })
+
+  return obj;
+}
+
+cryptico.privateKeyFromString = (string) => {
+  const obj = JSON.parse(string)
+
+  const rsa = new RSAKey();
+
+  for (let key in obj) {
+    rsa[key] = parseBigInt(cryptico.b64to16(obj[key].split('|')[0]), 16);
+  }
+
+  rsa.e = parseInt("03", 16);
+
+  return rsa;
 }
