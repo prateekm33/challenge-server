@@ -10,7 +10,6 @@ $(document).ready(function() {
 function initRSAkeyUI() {
   const $rsaForm = $('#rsa-form')
   $rsaForm.on('submit', evt => { 
-    // TODO: escape user input
     const passphrase = $('#passphrase').val();
     $('#passphrase').val('')
 
@@ -43,7 +42,7 @@ function genRSA(passphrase) {
 }
 
 function formatRSAkey(RSAkey) {
-  // TODO: any formatting prior to download needs to be done here
+  // any formatting prior to download needs to be done here
   const formattedKey = cryptico.privateKeyString(RSAkey);
 
   return formattedKey;
@@ -87,7 +86,6 @@ function saveKeyToDB(key) {
 }
 
 
-// TODO: cryptico library creates an RSA object. Need to ID how to convert that object into a private key string 
 function download(filename = 'sample.txt', data) {
   if (!data) {
     // TODO: Better null handling
@@ -179,7 +177,11 @@ function initFileDecryptionService() {
       const _RSAkey = cryptico.privateKeyFromString(this.result);
       const file = $('#decrypt-file')[0].files[0];
       decryptFile(file, _RSAkey);
+      
+      $('#privateKey').val('')
+      $('#decrypt-file').val('')
     })
+
   })
 
   $('#download-decrypt-file').click(() => {
@@ -198,7 +200,10 @@ function decryptFile(file, RSAkey) {
     const decryptedTextObj = cryptico.decrypt(this.result, RSAkey);
     decryptedMessage = decryptedTextObj.plaintext;
     // TODO: HANDLE UI FOR DECRYPT FILE AVAILABLE FOR DOWNLOAD
-    decryptedAvailableForDL();
+
+    if (decryptedTextObj.status === 'success') {
+      decryptedAvailableForDL();
+    }
   }
 }
 
